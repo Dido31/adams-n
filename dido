@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<title>İyi ki varsın ağam</title>
+<style>
+  body {
+    background: #222;
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    padding: 50px 20px;
+  }
+  button {
+    font-size: 28px;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 15px;
+    background-color: #00a86b;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #008a55;
+  }
+  #nedenler {
+    margin-top: 30px;
+    font-size: 20px;
+    line-height: 1.5;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+  #nedenler li {
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>İyi ki varsın ağam</h1>
+<button id="btn">İyi ki varsın ağam</button>
+<div id="nedenler">
+  <h3>Çünkü:</h3>
+  <ul id="liste"></ul>
+</div>
+
+<script>
+const nedenlerListesi = [
+  "Neden olmasın.",
+  "Bana hep yardımcı oldun.",
+  "Cahit gibi her hareketimle dalga geçmedin.",
+  "En zor zamanımda yanımda oldun.",
+  "Yüzümde hep bir tebessüm bırakıyorsun.",
+  "Seni tanıdığım için şanslıyım.",
+  "B yi unutmamda yardımcı oldun.",
+  "Birlikte yaşadığımız anılar çok kıymetli.",
+  "Sen gerçek bir ağasın.",
+  "Hep böyle kal, hiç değişme."
+];
+
+const btn = document.getElementById('btn');
+const liste = document.getElementById('liste');
+
+let index = 0;
+
+btn.addEventListener('click', () => {
+  if(index >= nedenlerListesi.length) {
+    // Bittiğinde başa dön, ya da istersen butonu kapat
+    index = 0;
+  }
+  const li = document.createElement('li');
+  li.textContent = nedenlerListesi[index];
+  liste.appendChild(li);
+  index++;
+});
+</script>
+
+</body>
+</html>
