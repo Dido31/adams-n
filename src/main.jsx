@@ -1,139 +1,42 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { createRoot } from "react-dom/client";
-import { Mic, Send, Volume2, Trash2 } from "lucide-react";
-import "./styles.css";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+// Eğer Google GenAI kütüphanesini kullanıyorsan importu dursun
+import { GoogleGenAI } from '@google/genai'; 
 
-// Vercel için port numarasını kaldırıp relative path (göreli yol) yaptık
-const API_URL = "/api/chat";// Burayı birazdan gerçek backend linkinle değiştireceğiz
-const STORAGE_KEY = "https://jarvismobile.onrender.com";
+// Vercel ortamındaki değişkenleri okuyabilmesi için dotenv'i kesinlikle başlatıyoruz
+dotenv.config();
 
-function App() {
-  const [messages, setMessages] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    } catch {
-      return [];
-    }
-  });
-  const [input, setInput] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [status, setStatus] = useState("Hazir");
-  const bottomRef = useRef(null);
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-40)));
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+// API Key kontrolünü hem process.env hem de Vercel ortamı için kesinleştiriyoruz
+const apiKey = process.env.GEMINI_API_KEY;
 
-  const canListen = useMemo(() => Boolean(window.SpeechRecognition || window.webkitSpeechRecognition), []);
-
-  async function sendMessage(text = input) {
-    const clean = text.trim();
-    if (!clean || busy) return;
-    const nextMessages = [...messages, { role: "user", text: clean }];
-    setMessages(nextMessages);
-    setInput("");
-    setBusy(true);
-    setStatus("Dusunuyor");
-
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: clean, memory: nextMessages })
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Baglanti hatasi");
-      const answer = data.text || "Cevap alinamadi.";
-      setMessages([...nextMessages, { role: "assistant", text: answer }]);
-      speak(answer);
-      setStatus("Hazir");
-    } catch (error) {
-      setMessages([...nextMessages, { role: "assistant", text: `Hata: ${error.message}` }]);
-      setStatus("Hata");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  function speak(text) {
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "tr-TR";
-    utterance.rate = 1;
-    window.speechSynthesis.speak(utterance);
-  }
-
-  function listen() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      setStatus("Mikrofon bu tarayicida desteklenmiyor");
-      return;
-    }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "tr-TR";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.onstart = () => setStatus("Dinliyor");
-    recognition.onerror = () => setStatus("Ses alinamadi");
-    recognition.onend = () => setStatus("Hazir");
-    recognition.onresult = (event) => {
-      const text = event.results?.[0]?.[0]?.transcript || "";
-      if (text) sendMessage(text);
-    };
-    recognition.start();
-  }
-
-  function clearChat() {
-    window.speechSynthesis?.cancel();
-    setMessages([]);
-    localStorage.removeItem(STORAGE_KEY);
-  }
-
-  return (
-    <main className="app">
-      <header className="topbar">
-        <div>
-          <p className="eyebrow">JARVIS Mobile</p>
-          <h1>Yanindayim.</h1>
-        </div>
-        <div className="status">{status}</div>
-      </header>
-
-      <section className="orb" aria-hidden="true">
-        <div className="ring ringA" />
-        <div className="ring ringB" />
-        <div className="core" />
-      </section>
-
-      <section className="chat" aria-label="Sohbet">
-        {messages.length === 0 && <p className="empty">Bir sey yaz veya mikrofona dokun.</p>}
-        {messages.map((msg, index) => (
-          <article className={`bubble ${msg.role}`} key={`${msg.role}-${index}`}>
-            {msg.text}
-          </article>
-        ))}
-        <div ref={bottomRef} />
-      </section>
-
-      <form className="composer" onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
-        <button type="button" className="iconButton" onClick={listen} disabled={!canListen || busy} title="Konus">
-          <Mic size={20} />
-        </button>
-        <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="JARVIS'e yaz..." />
-        <button type="submit" className="iconButton primary" disabled={busy || !input.trim()} title="Gonder">
-          <Send size={20} />
-        </button>
-        <button type="button" className="iconButton" onClick={() => messages.at(-1)?.text && speak(messages.at(-1).text)} title="Tekrar oku">
-          <Volume2 size={20} />
-        </button>
-        <button type="button" className="iconButton" onClick={clearChat} title="Temizle">
-          <Trash2 size={20} />
-        </button>
-      </form>
-    </main>
-  );
+if (!apiKey) {
+  console.error("Kritik Hata: GEMINI_API_KEY tanımlı değil!");
 }
 
-createRoot(document.getElementById("root")).render(<App />);
+// Sen buraya kendi /api/chat route (istek) kodlarını eklemiştin, oradaki anahtar kontrolünü de şu şekle getir:
+app.post('/api/chat', async (req, res) => {
+  try {
+    if (!apiKey) {
+      return res.status(500).json({ error: "Gemini API key sunucuda bulunamadı. Lütfen Vercel ayarlarını kontrol edin." });
+    }
+    
+    // Kendi yapay zeka cevap üretme kodların buraya gelecek...
+    // Örnek: const aiResponse = await ... (apiKey kullanarak istek at)
+    
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Vercel Serverless mimaride app.listen() işlemine gerek duymaz ama localde test için kalabilir
+const PORT = process.env.PORT || 8787;
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`Server ${PORT} üzerinde çalışıyor`));
+}
+
+export default app;
