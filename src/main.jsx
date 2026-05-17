@@ -5,7 +5,7 @@ import "./styles.css";
 
 // Vercel için port numarasını kaldırıp relative path (göreli yol) yaptık
 const API_URL = "/api/chat";// Burayı birazdan gerçek backend linkinle değiştireceğiz
-const STORAGE_KEY = "jarvismobile.onrender.com";
+const STORAGE_KEY = "https://jarvismobile.onrender.com";
 
 function App() {
   const [messages, setMessages] = useState(() => {
