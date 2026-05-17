@@ -1,23 +1,22 @@
 {
-  "name": "jarvis-mobile-pwa",
+  "name": "jarvis-mobile-frontend",
+  "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite --host 0.0.0.0\" \"node server/index.js\"",
+    "dev": "vite",
     "build": "vite build",
-    "web": "vite --host 0.0.0.0",
-    "server": "node api/server.mjs"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "vite": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "express": "latest",
-    "cors": "latest",
-    "dotenv": "latest",
-    "@google/genai": "latest",
-    "concurrently": "latest",
     "lucide-react": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest"
   }
 }
