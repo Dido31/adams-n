@@ -1,23 +1,23 @@
-﻿{
-    "type":  "module",
-    "scripts":  {
-                    "dev":  "concurrently \"vite --host 0.0.0.0\" \"node server/index.js\"",
-                    "web":  "vite --host 0.0.0.0",
-                    "server":  "node server/index.js"
-                },
-    "dependencies":  {
-                         "@vitejs/plugin-react":  "latest",
-                         "vite":  "latest",
-                         "react":  "latest",
-                         "react-dom":  "latest",
-                         "express":  "latest",
-                         "cors":  "latest",
-                         "dotenv":  "latest",
-                         "@google/genai":  "latest",
-                         "concurrently":  "latest",
-                         "lucide-react":  "latest"
-                     },
-    "devDependencies":  {
-
-                        }
+{
+  "name": "jarvis-mobile-pwa",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite --host 0.0.0.0\" \"node server/index.js\"",
+    "build": "vite build",
+    "web": "vite --host 0.0.0.0",
+    "server": "node server/index.js"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "express": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "@google/genai": "latest",
+    "concurrently": "latest",
+    "lucide-react": "latest"
+  }
 }
