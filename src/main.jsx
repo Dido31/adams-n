@@ -1,9 +1,10 @@
-﻿import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Mic, Send, Volume2, Trash2 } from "lucide-react";
 import "./styles.css";
 
-const API_URL = `${window.location.protocol}//${window.location.hostname}:8787/api/chat`;
+// Vercel için port numarasını kaldırıp relative path (göreli yol) yaptık
+const API_URL = "/api/chat";
 const STORAGE_KEY = "jarvis-mobile-memory-v1";
 
 function App() {
