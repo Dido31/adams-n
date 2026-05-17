@@ -4,8 +4,8 @@ import { Mic, Send, Volume2, Trash2 } from "lucide-react";
 import "./styles.css";
 
 // Vercel için port numarasını kaldırıp relative path (göreli yol) yaptık
-const API_URL = "https://jarvismobile.onrender.com"; // Burayı birazdan gerçek backend linkinle değiştireceğiz
-const STORAGE_KEY = "jarvis-mobile-memory-v1";
+const API_URL = "/api/chat";// Burayı birazdan gerçek backend linkinle değiştireceğiz
+const STORAGE_KEY = "jarvismobile.onrender.com";
 
 function App() {
   const [messages, setMessages] = useState(() => {
