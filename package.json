@@ -6,7 +6,7 @@
     "dev": "concurrently \"vite --host 0.0.0.0\" \"node server/index.js\"",
     "build": "vite build",
     "web": "vite --host 0.0.0.0",
-    "server": "node server/index.js"
+    "server": "node api/server.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
