@@ -6,14 +6,14 @@
       "use": "@vercel/static-build"
     },
     {
-      "src": "server.mjs",
+      "src": "api/server.mjs",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "server.mjs"
+      "dest": "api/server.mjs"
     },
     {
       "src": "/(.*)",
@@ -21,4 +21,3 @@
     }
   ]
 }
-
